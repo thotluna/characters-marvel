@@ -39,6 +39,7 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken : ${{ secrets.CF_API_TOKEN }}
           projectName: characters-marvel
           directory: ./dist
