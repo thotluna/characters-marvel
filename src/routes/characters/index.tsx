@@ -1,27 +1,54 @@
-import { component$, useSignal, useTask$ } from '@builder.io/qwik';
+import { component$, useSignal, useTask$, useVisibleTask$ } from '@builder.io/qwik';
 import { type DocumentHead, server$ } from '@builder.io/qwik-city';
 
 import MD5 from 'crypto-js/md5';
 import { CharactersList } from '~/components/Characters';
 
-import type { ICharacterDataWrapper } from '~/types/characters';
+import type { ICharacter, ICharacterDataWrapper } from '~/types/characters';
 
 export default component$(() => {
 
   const page = useSignal(0)
+  const flatElement = useSignal<HTMLElement>()
   const storage = useSignal<ICharacterDataWrapper | null>()
 
   useTask$(async ({track}) => {
     track(() => page.value)
     console.log(page.value)
     const data = await getCharacters({page: page.value})
-    storage.value = data    
+    if(storage.value?.data?.results && data?.data?.results){
+      const oldResult: ICharacter[] = storage.value.data.results
+      storage.value= data
+      if(storage.value.data && storage.value.data.results){
+        storage.value.data.results = [...oldResult, ...storage.value.data.results]
+      }
+    }else{
+      storage.value = data    
+    }
+  })
+
+  useVisibleTask$(({track, cleanup}) => {
+
+    track(() => flatElement.value)
+
+    const observer = new IntersectionObserver( (entries) => {
+      if(entries[0]?.isIntersecting){
+        page.value = ++page.value
+      }
+    }, {
+      rootMargin: "500px",
+      threshold: 0,
+    })
+
+    if(flatElement?.value) observer.observe(flatElement.value)
+
+    cleanup(() => observer.disconnect)
   })
 
   return (
     <>
     <section class=' w-full p-8 justify-center items-center '>
-      <CharactersList list={storage.value?.data?.results}/>
+      <CharactersList ref={flatElement} list={storage.value?.data?.results}/>
     </section>
     </>
   )
