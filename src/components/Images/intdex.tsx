@@ -7,11 +7,33 @@ interface ImageProps{
 
 export const Image = component$<ImageProps>(({src, alt}) => {
   const isLoaded = useSignal(false)
+  const hasError = useSignal(false)
+  const file = useSignal('')
   const hidden = isLoaded.value ? '' : 'hidden'
+  
 
   useTask$(({track}) => {
     track(() => src)
-    isLoaded.value = false    
+    isLoaded.value = false 
+    
+    if(!file.value){
+      const fileNameAndExtension = src.split('/').at(-1)
+      if(fileNameAndExtension){
+        const [name] = fileNameAndExtension.split('.')
+        file.value = `/images/characters/${name}.webp`
+      }else{
+        file.value = src
+      }
+      console.log('cargando nueva imagenes: ', file.value);
+      
+    }
+
+    track(() => hasError.value)
+    if(hasError.value && file.value !== src){
+      console.error('Error:', file.value, src)
+      file.value = src
+      hasError.value = false
+    }
   })
 
   return (
@@ -20,7 +42,13 @@ export const Image = component$<ImageProps>(({src, alt}) => {
       
       }   
 
-      <img class={ `w-full h-full object-cover ${hidden} ` } width='100%' height='100%'  src={src} alt={alt} onLoad$={() => isLoaded.value = true} />
+      <img 
+        class={ `w-full h-full object-cover ${hidden} ` } 
+        width='100%' height='100%'  
+        src={file.value} 
+        alt={alt} 
+        onLoad$={() => isLoaded.value = true} 
+        onError$={() => hasError.value = true } />
       
     </picture>
   )
