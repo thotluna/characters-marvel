@@ -1,8 +1,7 @@
 import { component$, useSignal, useTask$ } from '@builder.io/qwik';
-import { DocumentHead, server$ } from '@builder.io/qwik-city';
+import { type DocumentHead, server$ } from '@builder.io/qwik-city';
 
 import MD5 from 'crypto-js/md5';
-import { CharacterComponent } from '~/components/character';
 import { CharactersList } from '~/components/Characters';
 
 import type { ICharacterDataWrapper } from '~/types/characters';
@@ -22,7 +21,7 @@ export default component$(() => {
   return (
     <>
     <section class=' w-full p-8 justify-center items-center '>
-      <CharactersList list={storage.value?.data?.results ?? []}/>
+      <CharactersList list={storage.value?.data?.results}/>
     </section>
     </>
   )
