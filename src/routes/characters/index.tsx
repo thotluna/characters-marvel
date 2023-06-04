@@ -2,6 +2,8 @@ import { component$, useSignal, useTask$ } from '@builder.io/qwik';
 import { DocumentHead, server$ } from '@builder.io/qwik-city';
 
 import MD5 from 'crypto-js/md5';
+import { CharacterComponent } from '~/components/character';
+import { CharactersList } from '~/components/Characters';
 
 import type { ICharacterDataWrapper } from '~/types/characters';
 
@@ -14,19 +16,14 @@ export default component$(() => {
     track(() => page.value)
     console.log(page.value)
     const data = await getCharacters({page: page.value})
-    storage.value = data
-
-    console.log(data);
-    
+    storage.value = data    
   })
 
   return (
     <>
-    <h2>{storage.value?.data?.offset} / {storage.value?.data?.total}</h2>
-    <div>
-      <button onClick$={() => page.value = --page.value}>Anterior</button>
-      <button onClick$={() => page.value = ++page.value}>Siguiente</button>
-    </div>
+    <section class=' w-full p-8 justify-center items-center '>
+      <CharactersList list={storage.value?.data?.results ?? []}/>
+    </section>
     </>
   )
 })
