@@ -6,7 +6,7 @@ export default component$(() => {
   return (
     <>
       <Header />
-      <main class='flex-1 w-full h-full'>
+      <main class='container p-8 flex-1 w-full'>
         <Slot />
       </main>
       <Footer />

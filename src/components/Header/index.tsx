@@ -10,7 +10,7 @@ export const Header = component$(() => {
       <div class='w-full h-full bg-slate-800 backdrop-blur-sm opacity-70 bg-no-repeat bg-cover bg-center absolute top-0 bottom-0 left-0 right-0 z-10 '>
 
       </div>
-      <div class='z-20'>
+      <div class='p-8 z-20'>
         <MarvelLogo width={260} height={104} />
       </div>
     </header>
