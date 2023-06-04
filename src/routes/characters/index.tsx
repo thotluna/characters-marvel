@@ -1,10 +1,11 @@
-import { component$, useSignal, useTask$, useVisibleTask$ } from '@builder.io/qwik';
-import { type DocumentHead, server$ } from '@builder.io/qwik-city';
+import { component$, useContextProvider, useSignal, useStore, useTask$, useVisibleTask$, $ } from '@builder.io/qwik';
+import { type DocumentHead, server$, useNavigate } from '@builder.io/qwik-city';
 
 import MD5 from 'crypto-js/md5';
 import { CharactersList } from '~/components/Characters';
 
 import type { ICharacter, ICharacterDataWrapper } from '~/types/characters';
+import { characterContext } from '../../contexts/character-context';
 
 export default component$(() => {
 
@@ -27,6 +28,10 @@ export default component$(() => {
     }
   })
 
+  const characterSelected = useStore<{character?: ICharacter}>({})
+  useContextProvider(characterContext, characterSelected)
+  const nav = useNavigate()
+
   useVisibleTask$(({track, cleanup}) => {
 
     track(() => flatElement.value)
@@ -45,10 +50,18 @@ export default component$(() => {
     cleanup(() => observer.disconnect)
   })
 
+  const handlerOnClickItem = $((id?: number) => {
+    if(id) nav(id.toString())
+  })
+
+
   return (
     <>
     <section class=' w-full p-8 justify-center items-center '>
-      <CharactersList ref={flatElement} list={storage.value?.data?.results}/>
+      <CharactersList 
+        onClickItem={ handlerOnClickItem }
+        ref={flatElement} 
+        list={storage.value?.data?.results}/>
     </section>
     </>
   )
