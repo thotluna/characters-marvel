@@ -1,5 +1,5 @@
 import { component$, useSignal, useTask$ } from '@builder.io/qwik';
-import { server$ } from '@builder.io/qwik-city';
+import { DocumentHead, server$ } from '@builder.io/qwik-city';
 
 import MD5 from 'crypto-js/md5';
 
@@ -30,6 +30,16 @@ export default component$(() => {
     </>
   )
 })
+
+export const head: DocumentHead = {
+  title: 'Marvel Characters',
+  meta: [
+    {
+      name: 'Marvel Characters',
+      content: 'List of characters from Marvel',
+    },
+  ],
+};
 
 interface GetCharactersProps{
   page?: number
