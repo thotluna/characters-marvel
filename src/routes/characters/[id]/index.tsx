@@ -12,6 +12,8 @@ import { getHash } from "~/services/get-hash";
 import { HeaderCharacter } from "~/components/header-character";
 import { Separator } from "~/components/separator";
 import { ComicsGrid } from "~/components/comics-grid";
+import { useMessageContext } from "~/hooks/use-message-context";
+import { COLOR_MESSAGE } from "~/components/message";
 
 export default component$(() => {
   const location = useLocation();
@@ -20,6 +22,7 @@ export default component$(() => {
 
   const nav = useNavigate();
   const { selected } = useCharacterContext();
+  const storeMessage = useMessageContext()
 
   useTask$(async () => {
     const id = location.params.id;
@@ -27,6 +30,10 @@ export default component$(() => {
       character.value = selected.character;
     } else {
       const data = await getCharacter({ id });
+      if(!data){
+        storeMessage.color = COLOR_MESSAGE.ERROR
+        storeMessage.message = 'Error. dont have key token'
+      }
       if (!data?.data?.results) {
         nav("/characters");
       } else {

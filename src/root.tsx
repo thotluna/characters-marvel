@@ -4,8 +4,10 @@ import {
   RouterOutlet,
   ServiceWorkerRegister,
 } from "@builder.io/qwik-city";
+import { COLOR_MESSAGE, MessageComponent } from "./components/message";
 import { RouterHead } from "./components/router-head/router-head";
 import { characterContext } from "./contexts/character-context";
+import { messageContext } from "./contexts/message-context";
 
 import "./global.css";
 import type { ICharacter } from "./types/characters";
@@ -20,6 +22,9 @@ export default component$(() => {
   const characterSelected = useStore<{ character?: ICharacter }>({});
   useContextProvider(characterContext, characterSelected);
 
+  const messageStore = useStore<{ message?: string, color: string }>({message: 'probando', color: COLOR_MESSAGE.INFO})
+  useContextProvider(messageContext, messageStore)
+
   return (
     <QwikCityProvider>
       <head>
@@ -29,9 +34,10 @@ export default component$(() => {
       </head>
       <body
         lang="en"
-        class="bg-slate-800 text-slate-300  h-screen flex flex-col gap-8"
+        class="relative bg-slate-800 text-slate-300  h-screen flex flex-col gap-8"
       >
         <RouterOutlet />
+        <MessageComponent />
         <ServiceWorkerRegister />
       </body>
     </QwikCityProvider>

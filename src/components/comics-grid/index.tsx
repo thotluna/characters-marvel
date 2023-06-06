@@ -1,10 +1,12 @@
 import { component$, useSignal, useTask$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { ENDPOINT_CHARACTERS, ENDPOINT_COMICS } from "~/constants";
+import { useMessageContext } from "~/hooks/use-message-context";
 import { getHash } from "~/services/get-hash";
 import type { IComic, IDataWrapper } from "~/types/characters";
 import { ItemComic } from "../item-comic";
 import { Label } from "../label";
+import { COLOR_MESSAGE } from "../message";
 import { Separator } from "../separator";
 
 export interface ComicsGridProps {
@@ -13,9 +15,14 @@ export interface ComicsGridProps {
 
 export const ComicsGrid = component$<ComicsGridProps>(({ id }) => {
   const comics = useSignal<IComic[]>();
+  const storeMessage = useMessageContext()
 
   useTask$(async () => {
     const res = await getCharacterComics({ id: id.toString() });
+    if(!res){
+      storeMessage.color = COLOR_MESSAGE.ERROR
+      storeMessage.message = 'Error. dont have key token'
+    }
     comics.value = res?.data?.results;
   });
 
@@ -49,11 +56,12 @@ const getCharacterComics = server$(async function ({
 }: {
   id: string;
 }): Promise<IDataWrapper<IComic> | null> {
+  
   const privateKey = this.env.get('API_TOKEN_KEY')
 
   if(!privateKey){ 
     console.error('Error. dont have API_TOKEN_KEY');
-      
+    
     return null
   
   }
