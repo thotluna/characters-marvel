@@ -1,5 +1,5 @@
-import { component$ } from '@builder.io/qwik';
+import { component$ } from "@builder.io/qwik";
 
 export const Footer = component$(() => {
-  return <div>Hello Qwik!</div>
+  return <div>Hello Qwik!</div>;
 });

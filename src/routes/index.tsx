@@ -1,5 +1,5 @@
-import { component$ } from '@builder.io/qwik';
-import { type DocumentHead, Link } from '@builder.io/qwik-city';
+import { component$ } from "@builder.io/qwik";
+import { type DocumentHead, Link } from "@builder.io/qwik-city";
 
 export default component$(() => {
   return (
@@ -10,19 +10,17 @@ export default component$(() => {
         <br />
         Happy coding.
       </p>
-      <Link href='/characters'>
-        Characters
-      </Link>
+      <Link href="/characters">Characters</Link>
     </>
   );
 });
 
 export const head: DocumentHead = {
-  title: 'Welcome to Qwik',
+  title: "Welcome to Qwik",
   meta: [
     {
-      name: 'description',
-      content: 'Qwik site description',
+      name: "description",
+      content: "Qwik site description",
     },
   ],
 };

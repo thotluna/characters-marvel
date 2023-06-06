@@ -1,10 +1,14 @@
-import { component$, useContextProvider, useStore } from '@builder.io/qwik';
-import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
-import { RouterHead } from './components/router-head/router-head';
-import { characterContext } from './contexts/character-context';
+import { component$, useContextProvider, useStore } from "@builder.io/qwik";
+import {
+  QwikCityProvider,
+  RouterOutlet,
+  ServiceWorkerRegister,
+} from "@builder.io/qwik-city";
+import { RouterHead } from "./components/router-head/router-head";
+import { characterContext } from "./contexts/character-context";
 
-import './global.css';
-import type { ICharacter } from './types/characters';
+import "./global.css";
+import type { ICharacter } from "./types/characters";
 
 export default component$(() => {
   /**
@@ -13,8 +17,8 @@ export default component$(() => {
    *
    * Dont remove the `<head>` and `<body>` elements.
    */
-  const characterSelected = useStore<{character?: ICharacter}>({})
-  useContextProvider(characterContext, characterSelected)
+  const characterSelected = useStore<{ character?: ICharacter }>({});
+  useContextProvider(characterContext, characterSelected);
 
   return (
     <QwikCityProvider>
@@ -23,7 +27,10 @@ export default component$(() => {
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
       </head>
-      <body lang="en" class="bg-slate-800 text-slate-300  h-screen flex flex-col gap-8">
+      <body
+        lang="en"
+        class="bg-slate-800 text-slate-300  h-screen flex flex-col gap-8"
+      >
         <RouterOutlet />
         <ServiceWorkerRegister />
       </body>
