@@ -94,7 +94,16 @@ const getCharacters = server$(async function ({
   query,
 }: GetCharactersProps): Promise<IDataWrapper<ICharacter> | null> {
   const LIMIT = 20;
-  const { hash, publicToken, ts } = getHash();
+  const privateKey = this.env.get('API_TOKEN_KEY')
+
+  if(!privateKey){ 
+    console.error('Error. dont have API_TOKEN_KEY');
+      
+    return null
+  
+  }
+
+  const { hash, publicToken, ts } = getHash(privateKey );
 
   const url = new URL(
     `https://gateway.marvel.com:443/v1/public/${ENDPOINT_CHARACTERS}`

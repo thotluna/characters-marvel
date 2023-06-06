@@ -3,8 +3,9 @@ import { server$ } from "@builder.io/qwik-city";
 import { ENDPOINT_CHARACTERS, ENDPOINT_COMICS } from "~/constants";
 import { getHash } from "~/services/get-hash";
 import type { IComic, IDataWrapper } from "~/types/characters";
-import { Image } from "../Images/intdex";
+import { ItemComic } from "../item-comic";
 import { Label } from "../label";
+import { Separator } from "../separator";
 
 export interface ComicsGridProps {
   id: number;
@@ -22,26 +23,20 @@ export const ComicsGrid = component$<ComicsGridProps>(({ id }) => {
     <section>
       <header>
         <Label>Comics</Label>
+        <Separator height="2rem" />
       </header>
       {(!comics.value || comics.value.length == 0) && (
         <h2>Does not any comics for this character</h2>
       )}
       <section
-        class=" grid gap-4"
+        class="grid gap-4"
         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(164px, 1fr))" }}
       >
         {comics.value &&
           comics.value.length > 0 &&
           comics.value.map((comic) => {
             return (
-              <article key={comic.id} class="self-top justify-self-center p-4">
-                <div class="w-[164px] h-[250px]">
-                  <Image
-                    src={`${comic.thumbnail?.path}.${comic.thumbnail?.extension}`}
-                  />
-                </div>
-                <h2 class="w-full text-center mt-4">{comic.title}</h2>
-              </article>
+              <ItemComic key={comic.id} src={`${comic.thumbnail?.path}.${comic.thumbnail?.extension}`} title={comic.title} />
             );
           })}
       </section>
@@ -54,7 +49,16 @@ const getCharacterComics = server$(async function ({
 }: {
   id: string;
 }): Promise<IDataWrapper<IComic> | null> {
-  const { hash, publicToken, ts } = getHash();
+  const privateKey = this.env.get('API_TOKEN_KEY')
+
+  if(!privateKey){ 
+    console.error('Error. dont have API_TOKEN_KEY');
+      
+    return null
+  
+  }
+
+  const { hash, publicToken, ts } = getHash(privateKey );
 
   const url = new URL(
     `https://gateway.marvel.com:443/v1/public/${ENDPOINT_CHARACTERS}/${id}/${ENDPOINT_COMICS}`
