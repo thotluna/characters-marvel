@@ -7,7 +7,7 @@ export const COLOR_MESSAGE = {
 } 
 
 export const MessageComponent = component$(() => {
-  const messageStore = useMessageContext()
+  const {messageStore, clear} = useMessageContext()
   const isShowMessage = useSignal(false)
 
   useVisibleTask$(({track, cleanup}) => {
@@ -19,7 +19,7 @@ export const MessageComponent = component$(() => {
     }
 
     const interval = setInterval(() => {
-      messageStore.message = ''
+      clear()
     }, 3000);
     cleanup(() => clearInterval(interval));
 

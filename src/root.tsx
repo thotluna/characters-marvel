@@ -22,7 +22,7 @@ export default component$(() => {
   const characterSelected = useStore<{ character?: ICharacter }>({});
   useContextProvider(characterContext, characterSelected);
 
-  const messageStore = useStore<{ message?: string, color: string }>({message: 'probando', color: COLOR_MESSAGE.INFO})
+  const messageStore = useStore<{ message?: string, color: string }>({message: '', color: COLOR_MESSAGE.INFO})
   useContextProvider(messageContext, messageStore)
 
   return (

@@ -6,9 +6,7 @@ import {
   $,
 } from "@builder.io/qwik";
 import { type DocumentHead, server$, useNavigate } from "@builder.io/qwik-city";
-
 import { CharactersList } from "~/components/Characters";
-import { COLOR_MESSAGE } from "~/components/message";
 import { ENDPOINT_CHARACTERS } from "~/constants";
 import { useMessageContext } from "~/hooks/use-message-context";
 import { getHash } from "~/services/get-hash";
@@ -19,14 +17,13 @@ export default component$(() => {
   const page = useSignal(0);
   const flatElement = useSignal<HTMLElement>();
   const storage = useSignal<IDataWrapper<ICharacter> | null>();
-  const storeMessage = useMessageContext()
+  const {setError} = useMessageContext()
 
   useTask$(async ({ track }) => {
     track(() => page.value);
     const data = await getCharacters({ page: page.value });
     if(!data){
-      storeMessage.color = COLOR_MESSAGE.ERROR
-      storeMessage.message = 'Error. dont have key token'
+      setError('Error. dont have key token')
     }
     if (storage.value?.data?.results && data?.data?.results) {
       const oldResult: ICharacter[] = storage.value.data.results;

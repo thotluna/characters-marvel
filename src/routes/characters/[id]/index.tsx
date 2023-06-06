@@ -13,17 +13,14 @@ import { HeaderCharacter } from "~/components/header-character";
 import { Separator } from "~/components/separator";
 import { ComicsGrid } from "~/components/comics-grid";
 import { useMessageContext } from "~/hooks/use-message-context";
-import { COLOR_MESSAGE } from "~/components/message";
 
 export default component$(() => {
   const location = useLocation();
-
-  const character = useSignal<ICharacter>();
-
   const nav = useNavigate();
+  const character = useSignal<ICharacter>();
   const { selected } = useCharacterContext();
-  const storeMessage = useMessageContext()
-
+  const { setError } = useMessageContext()
+  
   useTask$(async () => {
     const id = location.params.id;
     if (selected.character) {
@@ -31,14 +28,24 @@ export default component$(() => {
     } else {
       const data = await getCharacter({ id });
       if(!data){
-        storeMessage.color = COLOR_MESSAGE.ERROR
-        storeMessage.message = 'Error. dont have key token'
+        setError('Error. dont have key token')
+        console.error('Error. dont have key token')
+        nav('characters')
+      }else{
+        if(data.code !== 200 ){
+          setError(data.status ?? 'Error')
+          console.error(data.status)
+          nav('characters')
+        }else{
+          if (!data.data?.results) {
+            nav("/characters");
+          } else {
+            character.value = data?.data?.results[0];
+          }
+
+        }
       }
-      if (!data?.data?.results) {
-        nav("/characters");
-      } else {
-        character.value = data?.data?.results[0];
-      }
+      
     }
   });
 
@@ -94,7 +101,9 @@ const getCharacter = server$(async function ({
       method: "GET",
     });
 
-    const data = await res.json();
+    const data = await res.json();  
+    console.log(data);
+    
     return data;
   } catch (error) {
     console.error(error);
