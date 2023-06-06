@@ -21,9 +21,11 @@ html {
   font-family: 'Roboto-Regular', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
+    
 }
 
 body {
+  min-width: 377px;
   padding: 0;
   line-height: inherit;
 }

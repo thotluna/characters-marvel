@@ -1,5 +1,4 @@
-import type { Signal } from '@builder.io/qwik';
-import { component$ } from '@builder.io/qwik';
+import { component$, type Signal } from '@builder.io/qwik';
 import { useCharacterContext } from '~/hooks/use-character-context';
 import { type ICharacter } from '~/types/characters';
 import { Image } from '../Images/intdex';
