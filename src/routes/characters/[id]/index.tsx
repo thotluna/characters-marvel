@@ -33,7 +33,7 @@ export default component$(() => {
         nav("characters");
       } else {
         if (data.code !== 200) {
-          setError(data.status ?? "Error");
+          setError(data.status);
           console.error(data.status);
           nav("characters");
         } else {
