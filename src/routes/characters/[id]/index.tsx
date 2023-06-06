@@ -32,7 +32,7 @@ export default component$(() => {
         console.error("Error. dont have key token");
         nav("characters");
       } else {
-        if (data.code !== 200) {
+        if (data.code !== 200 && data.status) {
           setError(data.status);
           console.error(data.status);
           nav("characters");
