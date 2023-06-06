@@ -1,21 +1,20 @@
-import { component$, useContextProvider, useSignal, useStore, useTask$, useVisibleTask$, $ } from '@builder.io/qwik';
+import { component$, useSignal, useTask$, useVisibleTask$, $ } from '@builder.io/qwik';
 import { type DocumentHead, server$, useNavigate } from '@builder.io/qwik-city';
 
-import MD5 from 'crypto-js/md5';
 import { CharactersList } from '~/components/Characters';
+import { ENDPOINT_CHARACTERS } from '~/constants';
+import { getHash } from '~/services/get-hash';
 
-import type { ICharacter, ICharacterDataWrapper } from '~/types/characters';
-import { characterContext } from '../../contexts/character-context';
+import type { ICharacter, IDataWrapper } from '~/types/characters';
 
 export default component$(() => {
 
   const page = useSignal(0)
   const flatElement = useSignal<HTMLElement>()
-  const storage = useSignal<ICharacterDataWrapper | null>()
+  const storage = useSignal<IDataWrapper<ICharacter> | null>()
 
   useTask$(async ({track}) => {
     track(() => page.value)
-    console.log(page.value)
     const data = await getCharacters({page: page.value})
     if(storage.value?.data?.results && data?.data?.results){
       const oldResult: ICharacter[] = storage.value.data.results
@@ -28,8 +27,7 @@ export default component$(() => {
     }
   })
 
-  const characterSelected = useStore<{character?: ICharacter}>({})
-  useContextProvider(characterContext, characterSelected)
+  
   const nav = useNavigate()
 
   useVisibleTask$(({track, cleanup}) => {
@@ -82,16 +80,11 @@ interface GetCharactersProps{
   query?: string
 }
 
-const ENDPOINT_CHARACTERS = 'characters'
 
-const getCharacters = server$(async function ({page = 0, query}: GetCharactersProps): Promise<ICharacterDataWrapper | null> {
+
+const getCharacters = server$(async function ({page = 0, query}: GetCharactersProps): Promise<IDataWrapper<ICharacter> | null> {
   const LIMIT = 20
-
-  const privateToken = this.env.get('API_TOKEN_KEY') ?? ''
-  const publicToken = this.env.get('VITE_API_TOKEN_KEY')
-
-  const ts = new Date().getTime()
-  const hash = MD5(ts + privateToken + publicToken)
+  const { hash, publicToken, ts } = getHash()
 
   const url = new URL(`https://gateway.marvel.com:443/v1/public/${ENDPOINT_CHARACTERS}`)
 
@@ -108,8 +101,6 @@ const getCharacters = server$(async function ({page = 0, query}: GetCharactersPr
   url.searchParams.append('ts', `${ts}`)
   url.searchParams.append('apikey', `${publicToken}`)
   url.searchParams.append('hash', `${hash}`)
-
-  console.log({url})
 
   try {
     const res = await fetch(url, {

@@ -24,13 +24,11 @@ export const Image = component$<ImageProps>(({src, alt}) => {
       }else{
         file.value = src
       }
-      console.log('cargando nueva imagenes: ', file.value);
       
     }
 
     track(() => hasError.value)
     if(hasError.value && file.value !== src){
-      console.error('Error:', file.value, src)
       file.value = src
       hasError.value = false
     }
