@@ -17,13 +17,13 @@ export default component$(() => {
   const page = useSignal(0);
   const flatElement = useSignal<HTMLElement>();
   const storage = useSignal<IDataWrapper<ICharacter> | null>();
-  const {setError} = useMessageContext()
+  const { setError } = useMessageContext();
 
   useTask$(async ({ track }) => {
     track(() => page.value);
     const data = await getCharacters({ page: page.value });
-    if(!data){
-      setError('Error. dont have key token')
+    if (!data) {
+      setError("Error. dont have key token");
     }
     if (storage.value?.data?.results && data?.data?.results) {
       const oldResult: ICharacter[] = storage.value.data.results;
@@ -98,16 +98,15 @@ const getCharacters = server$(async function ({
   query,
 }: GetCharactersProps): Promise<IDataWrapper<ICharacter> | null> {
   const LIMIT = 20;
-  const privateKey = this.env.get('API_TOKEN_KEY')
+  const privateKey = this.env.get("API_TOKEN_KEY");
 
-  if(!privateKey){ 
-    console.error('Error. dont have API_TOKEN_KEY');
-      
-    return null
-  
+  if (!privateKey) {
+    console.error("Error. dont have API_TOKEN_KEY");
+
+    return null;
   }
 
-  const { hash, publicToken, ts } = getHash(privateKey );
+  const { hash, publicToken, ts } = getHash(privateKey);
 
   const url = new URL(
     `https://gateway.marvel.com:443/v1/public/${ENDPOINT_CHARACTERS}`

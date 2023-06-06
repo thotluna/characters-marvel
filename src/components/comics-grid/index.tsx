@@ -14,12 +14,12 @@ export interface ComicsGridProps {
 
 export const ComicsGrid = component$<ComicsGridProps>(({ id }) => {
   const comics = useSignal<IComic[]>();
-  const { setError} = useMessageContext()
+  const { setError } = useMessageContext();
 
   useTask$(async () => {
     const res = await getCharacterComics({ id: id.toString() });
-    if(!res){
-       setError('Error. dont have key token')
+    if (!res) {
+      setError("Error. dont have key token");
     }
     comics.value = res?.data?.results;
   });
@@ -41,7 +41,11 @@ export const ComicsGrid = component$<ComicsGridProps>(({ id }) => {
           comics.value.length > 0 &&
           comics.value.map((comic) => {
             return (
-              <ItemComic key={comic.id} src={`${comic.thumbnail?.path}.${comic.thumbnail?.extension}`} title={comic.title} />
+              <ItemComic
+                key={comic.id}
+                src={`${comic.thumbnail?.path}.${comic.thumbnail?.extension}`}
+                title={comic.title}
+              />
             );
           })}
       </section>
@@ -54,17 +58,15 @@ const getCharacterComics = server$(async function ({
 }: {
   id: string;
 }): Promise<IDataWrapper<IComic> | null> {
-  
-  const privateKey = this.env.get('API_TOKEN_KEY')
+  const privateKey = this.env.get("API_TOKEN_KEY");
 
-  if(!privateKey){ 
-    console.error('Error. dont have API_TOKEN_KEY');
-    
-    return null
-  
+  if (!privateKey) {
+    console.error("Error. dont have API_TOKEN_KEY");
+
+    return null;
   }
 
-  const { hash, publicToken, ts } = getHash(privateKey );
+  const { hash, publicToken, ts } = getHash(privateKey);
 
   const url = new URL(
     `https://gateway.marvel.com:443/v1/public/${ENDPOINT_CHARACTERS}/${id}/${ENDPOINT_COMICS}`
