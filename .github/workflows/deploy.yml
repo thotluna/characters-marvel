@@ -35,7 +35,6 @@ jobs:
       - name: Build the project
         run: |
           npm run build
-                - name: Deploy to Cloudflare Pages
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@2.0.0
