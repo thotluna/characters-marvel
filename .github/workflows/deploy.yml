@@ -42,4 +42,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           wranglerVersion: '2.20.0'
+          directory: ./dist
           command: pages publish --project-name=characters-marvel
+
