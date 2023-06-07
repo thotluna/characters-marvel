@@ -58,7 +58,7 @@ const getCharacterComics = server$(async function ({
 }: {
   id: string;
 }): Promise<IDataWrapper<IComic> | null> {
-  const privateKey = this.env.get("API_TOKEN_KEYS");
+  const privateKey = this.env.get("API_TOKEN_KEY");
 
   if (!privateKey) {
     return {
