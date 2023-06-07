@@ -22,8 +22,8 @@ export default component$(() => {
   useTask$(async ({ track }) => {
     track(() => page.value);
     const data = await getCharacters({ page: page.value });
-    if (!data) {
-      setError("Error. dont have key token");
+    if (data?.code !== 200 && data?.status) {
+      setError(`${data.code} ${data.status}`);
     }
     if (storage.value?.data?.results && data?.data?.results) {
       const oldResult: ICharacter[] = storage.value.data.results;
@@ -101,9 +101,10 @@ const getCharacters = server$(async function ({
   const privateKey = this.env.get("API_TOKEN_KEY");
 
   if (!privateKey) {
-    console.error("Error. dont have API_TOKEN_KEY");
-
-    return null;
+    return {
+      code: 500,
+      status: 'Does not have API_TOKEN_KEY'
+    };
   }
 
   const { hash, publicToken, ts } = getHash(privateKey);

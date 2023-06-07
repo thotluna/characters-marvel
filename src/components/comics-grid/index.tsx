@@ -18,8 +18,8 @@ export const ComicsGrid = component$<ComicsGridProps>(({ id }) => {
 
   useTask$(async () => {
     const res = await getCharacterComics({ id: id.toString() });
-    if (!res) {
-      setError("Error. dont have key token");
+    if (res?.code !== 200 && res?.status) {
+      setError(`${res.code} ${res.status}`);
     }
     comics.value = res?.data?.results;
   });
@@ -58,12 +58,13 @@ const getCharacterComics = server$(async function ({
 }: {
   id: string;
 }): Promise<IDataWrapper<IComic> | null> {
-  const privateKey = this.env.get("API_TOKEN_KEY");
+  const privateKey = this.env.get("API_TOKEN_KEYS");
 
   if (!privateKey) {
-    console.error("Error. dont have API_TOKEN_KEY");
-
-    return null;
+    return {
+      code: 500,
+      status: 'Does not have API_TOKEN_KEY'
+    };
   }
 
   const { hash, publicToken, ts } = getHash(privateKey);

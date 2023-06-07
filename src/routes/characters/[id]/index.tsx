@@ -80,8 +80,10 @@ const getCharacter = server$(async function ({
   const privateKey = this.env.get("API_TOKEN_KEY");
 
   if (!privateKey) {
-    console.error("Error. dont have API_TOKEN_KEY");
-    return null;
+    return {
+      code: 500,
+      status: 'Does not have API_TOKEN_KEY'
+    };
   }
 
   const { hash, publicToken, ts } = getHash(privateKey);

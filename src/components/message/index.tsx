@@ -18,10 +18,12 @@ export const MessageComponent = component$(() => {
       isShowMessage.value = false;
     }
 
-    const interval = setInterval(() => {
-      clear();
-    }, 3000);
-    cleanup(() => clearInterval(interval));
+    if(messageStore.message){
+      const interval = setInterval(() => {
+        clear();
+      }, 3000);
+      cleanup(() => clearInterval(interval));
+    }
   });
 
   return (
