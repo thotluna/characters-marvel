@@ -62,7 +62,7 @@ export default component$(() => {
   });
 
   const handlerOnClickItem = $((id?: number) => {
-    if (id) nav(id.toString());
+    if (id) nav(`/characters/${id.toString()}`);
   });
 
   return (
