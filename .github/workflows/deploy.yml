@@ -42,7 +42,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           wranglerVersion: '2.20.0'
-          entryPoint: ./src/entry.cloudflare-pages.tsx
           workingDirectory: characters-marvel
           command: pages publish ./dist
 
