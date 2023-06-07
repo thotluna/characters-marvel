@@ -35,10 +35,12 @@ jobs:
       - name: Build the project
         run: |
           npm run build
+                - name: Deploy to Cloudflare Pages
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@2.0.0
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           wranglerVersion: '2.20.0'
           command: pages publish --project-name=characters-marvel
